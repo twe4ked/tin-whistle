@@ -17,7 +17,7 @@ class TinWhistle
   def print
     # print out the name of the note
     @input.each do |note|
-      char = if ['f', 'F', 'c', 'C'].includes?(note)
+      char = if {'f', 'F', 'c', 'C'}.includes?(note)
         "#{note}#"
       else
         note.to_s
@@ -29,7 +29,7 @@ class TinWhistle
 
     # print a "." if the note is in the upper octave
     @input.each do |note|
-      char = if ('A'..'Z').to_a.includes?(note)
+      char = if ('A'..'Z').includes?(note)
         '.'
       elsif note == '|'
         '|'
@@ -60,5 +60,5 @@ class TinWhistle
   end
 end
 
-notes = STDIN.read.lines.reject { |line| line =~ /^T:/ }.join.chars
+notes = ARGF.read.lines.reject { |line| line =~ /^T:/ }.join.chars
 TinWhistle.new(notes).print
