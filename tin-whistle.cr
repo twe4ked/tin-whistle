@@ -41,16 +41,14 @@ class TinWhistle
     6.times do |n|
       @input.each do |note|
         char = case
-        when note ==  '.'
-          '.'
-        when note == ' '
-          ' '
-        when note == '|'
-          '|'
-        when NOTES[note.downcase][n] == 1
-          '●'
-        else
-          '○'
+        when ('a'..'g').to_a.includes?(note.downcase)
+          if NOTES[note.downcase][n] == 1
+            '●'
+          else
+            '○'
+          end
+        when [' ',  '.', '|'].includes?(note)
+          note
         end
 
         printf("%-3s", char)
