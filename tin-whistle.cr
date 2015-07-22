@@ -11,12 +11,22 @@ class TinWhistle
   }
 
   def initialize(input)
-    @input = input.select { |c| c != '\n' }
+    @input = input
   end
 
   def print
+    lines = @input.lines
+    number_of_lines = lines.size
+    lines.each_with_index do |line, index|
+      line = line.chars.select { |c| c != '\n' }
+      print_line(line) unless line.empty?
+      puts unless index+1 == number_of_lines
+    end
+  end
+
+  def print_line(line)
     # print out the name of the note
-    @input.each do |note|
+    line.each do |note|
       char = if ['f', 'F', 'c', 'C'].includes?(note)
         "#{note}#"
       else
@@ -28,7 +38,7 @@ class TinWhistle
     puts
 
     # print a "." if the note is in the upper octave
-    @input.each do |note|
+    line.each do |note|
       char = if ('A'..'Z').to_a.includes?(note)
         '.'
       elsif note == '|'
@@ -39,7 +49,7 @@ class TinWhistle
     puts
 
     6.times do |n|
-      @input.each do |note|
+      line.each do |note|
         char = case
         when ('a'..'g').to_a.includes?(note.downcase)
           if NOTES[note.downcase][n] == 1
@@ -61,5 +71,5 @@ end
 notes = STDIN.read.lines.reject do |line|
   line =~ /^T:/ ||
   line =~ /^#/
-end.join.chars
+end.join
 TinWhistle.new(notes).print
