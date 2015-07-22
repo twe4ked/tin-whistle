@@ -39,7 +39,7 @@ class TinWhistle
 
     # print a "." if the note is in the upper octave
     line.each do |note|
-      char = if ('A'..'Z').to_a.includes?(note)
+      char = if ('a'..'g').to_a.includes?(note)
         '.'
       elsif note == '|'
         '|'
