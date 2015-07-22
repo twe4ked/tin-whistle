@@ -58,5 +58,8 @@ class TinWhistle
   end
 end
 
-notes = STDIN.read.lines.reject { |line| line =~ /^T:/ }.join.chars
+notes = STDIN.read.lines.reject do |line|
+  line =~ /^T:/ ||
+  line =~ /^#/
+end.join.chars
 TinWhistle.new(notes).print
