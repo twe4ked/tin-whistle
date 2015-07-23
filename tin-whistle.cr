@@ -10,8 +10,13 @@ class TinWhistle
     'D' => [0, 1, 1, 1, 1, 1],
   }
 
-  def initialize(input)
-    @input = input
+  def initialize
+    notes = STDIN.read.lines.reject do |line|
+      line =~ /^T:/ ||
+      line =~ /^#/
+    end.join
+
+    @input = notes
   end
 
   def print
@@ -68,8 +73,4 @@ class TinWhistle
   end
 end
 
-notes = STDIN.read.lines.reject do |line|
-  line =~ /^T:/ ||
-  line =~ /^#/
-end.join
-TinWhistle.new(notes).print
+TinWhistle.new.print
