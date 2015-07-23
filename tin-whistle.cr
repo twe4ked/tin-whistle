@@ -32,13 +32,13 @@ class TinWhistle
   def print_line(line)
     # print out the name of the note
     line.each do |note|
-      char = if ['f', 'F', 'c', 'C'].includes?(note)
+      str = if ['f', 'F', 'c', 'C'].includes?(note)
         "#{note}#"
       else
         note.to_s
       end
 
-      printf("%-3s", char)
+      printf("%-3s", str)
     end
     puts
 
