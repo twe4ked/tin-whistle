@@ -11,7 +11,7 @@ class TinWhistle
   }
 
   def initialize
-    notes = STDIN.read.lines.reject do |line|
+    notes = ARGF.read.lines.reject do |line|
       line =~ /^T:/ ||
       line =~ /^#/
     end.join
