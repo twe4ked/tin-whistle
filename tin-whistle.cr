@@ -32,7 +32,7 @@ class TinWhistle
   def print_line(line)
     # print out the name of the note
     line.each do |note|
-      str = if ['f', 'F', 'c', 'C'].includes?(note)
+      str = if {'f', 'F', 'c', 'C'}.includes?(note)
         "#{note}#"
       else
         note.to_s
@@ -44,7 +44,7 @@ class TinWhistle
 
     # print a "." if the note is in the upper octave
     line.each do |note|
-      char = if ('a'..'g').to_a.includes?(note)
+      char = if ('a'..'g').includes?(note)
         '.'
       elsif note == '|'
         '|'
@@ -62,7 +62,7 @@ class TinWhistle
           else
             '○'
           end
-        when [' ',  '.', '|'].includes?(note)
+        when {' ',  '.', '|'}.includes?(note)
           note
         end
 
