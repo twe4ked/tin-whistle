@@ -13,3 +13,7 @@ Takes ABC notation from STDIN and prints out tin whistle diagrams.
     ●  ●  ●  ○  |  ○  ○  ○  ●  |  ●  ●  ○  ○  |  ○
     ●  ●  ○  ○  |  ○  ○  ○  ●  |  ●  ○  ○  ○  |  ○
     ●  ○  ○  ○  |  ○  ○  ○  ●  |  ○  ○  ○  ○  |  ○
+
+## Sources
+
+- http://damihce726.blogspot.com.au
