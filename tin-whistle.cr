@@ -9,9 +9,10 @@ class TinWhistle
     'c' => [0, 0, 0, 0, 0, 0], # sharp
     'D' => [0, 1, 1, 1, 1, 1],
   }
+  @input : String
 
   def initialize
-    notes = ARGF.read.lines.reject do |line|
+    notes = ARGF.gets_to_end.lines.reject do |line|
       line =~ /^T:/ ||
       line =~ /^#/
     end.join
