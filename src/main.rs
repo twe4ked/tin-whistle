@@ -27,7 +27,6 @@ enum Item {
     Bar,
     Space,
     Gap,
-    LineBreak,
 }
 
 impl From<char> for Item {
@@ -49,7 +48,6 @@ impl From<char> for Item {
             'B' => Item::Note(Note::B2),
             'C' => Item::Note(Note::C2Sharp),
 
-            '\n' => Item::LineBreak,
             '|' => Item::Bar,
             ' ' => Item::Space,
             '-' => Item::Gap,
@@ -80,7 +78,6 @@ impl fmt::Display for Item {
                 Note::C2Sharp => "C# ",
             },
             Item::Bar => "|  ",
-            Item::LineBreak => "",
             Item::Gap => "-  ",
             Item::Space => "   ",
         };
@@ -138,65 +135,53 @@ fn read_stdin() -> String {
     String::from_utf8(input).expect("invalid input")
 }
 
-fn parse_items(input: String) -> Vec<Item> {
-    let mut ignore = false;
-    let items: Vec<Item> = input
-        .chars()
-        .filter_map(|c| {
-            if ignore && c == '\n' {
-                ignore = false;
-                None
-            } else if c == '#' {
-                // TODO: Ignore "T:" comment lines /^T:.*\n/
-                ignore = true;
-                None
-            } else if ignore {
-                None
-            } else if c == '\n' {
-                None
-            } else {
-                Some(Item::from(c))
-            }
-        })
-        .collect();
-    items
+fn parse_items(input: String) -> Vec<Vec<Item>> {
+    input
+        .lines()
+        .filter(|line| !line.starts_with("#") && !line.starts_with("T:"))
+        .map(|line| line.chars().map(|c| Item::from(c)).collect())
+        .collect()
 }
 
 fn main() {
     let input = read_stdin();
-    let items = parse_items(input);
+    let item_lines = parse_items(input);
 
-    for item in &items {
-        print!("{}", item);
-    }
-    println!();
+    for items in item_lines {
+        for item in &items {
+            print!("{}", item);
+        }
+        println!();
 
-    for item in &items {
-        match item {
-            Item::Bar => print!("|  "),
-            _ => {
-                if item.is_high_octave() {
-                    print!(".  ");
-                } else {
-                    print!("   ");
+        for item in &items {
+            match item {
+                Item::Bar => print!("|  "),
+                _ => {
+                    if item.is_high_octave() {
+                        print!(".  ");
+                    } else {
+                        print!("   ");
+                    }
                 }
             }
         }
-    }
-    println!();
-
-    (0..6).for_each(|hole| {
-        &items.iter().for_each(|item| match item {
-            Item::Note(_) => {
-                if item.hole_covered(hole) {
-                    print!("●  ");
-                } else {
-                    print!("○  ");
-                }
-            }
-            Item::LineBreak | Item::Space | Item::Bar => print!("{}", item),
-            Item::Gap => print!("   "),
-        });
         println!();
-    });
+
+        (0..6).for_each(|hole| {
+            &items.iter().for_each(|item| match item {
+                Item::Note(_) => {
+                    if item.hole_covered(hole) {
+                        print!("●  ");
+                    } else {
+                        print!("○  ");
+                    }
+                }
+                Item::Space | Item::Bar => print!("{}", item),
+                Item::Gap => print!("   "),
+            });
+            println!();
+        });
+
+        println!();
+    }
 }
