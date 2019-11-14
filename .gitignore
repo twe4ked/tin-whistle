@@ -1,2 +1,2 @@
-tin-whistle
-.crystal
+/target
+**/*.rs.bk
