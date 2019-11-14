@@ -59,32 +59,7 @@ impl From<char> for Item {
 
 impl fmt::Display for Item {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(
-            f,
-            "{: <3}",
-            match self {
-                Item::Note(note) => match note {
-                    Note::D1 => "d",
-                    Note::E1 => "e",
-                    Note::F1Sharp => "f#",
-                    Note::G1 => "g",
-                    Note::A1 => "a",
-                    Note::B1 => "b",
-                    Note::C1Sharp => "c#",
-
-                    Note::D2 => "D",
-                    Note::E2 => "E",
-                    Note::F2Sharp => "F#",
-                    Note::G2 => "G",
-                    Note::A2 => "A",
-                    Note::B2 => "B",
-                    Note::C2Sharp => "C#",
-                },
-                Item::Bar => "|",
-                Item::Gap => "-",
-                Item::Space => "",
-            }
-        )
+        write!(f, "{: <3}", self.as_str())
     }
 }
 
@@ -98,6 +73,31 @@ const C: [bool; 6] = [false, false, false, false, false, false];
 const D2: [bool; 6] = [false, true, true, true, true, true];
 
 impl Item {
+    fn as_str(&self) -> &'static str {
+        match self {
+            Item::Note(note) => match note {
+                Note::D1 => "d",
+                Note::E1 => "e",
+                Note::F1Sharp => "f#",
+                Note::G1 => "g",
+                Note::A1 => "a",
+                Note::B1 => "b",
+                Note::C1Sharp => "c#",
+
+                Note::D2 => "D",
+                Note::E2 => "E",
+                Note::F2Sharp => "F#",
+                Note::G2 => "G",
+                Note::A2 => "A",
+                Note::B2 => "B",
+                Note::C2Sharp => "C#",
+            },
+            Item::Bar => "|",
+            Item::Gap => "-",
+            Item::Space => "",
+        }
+    }
+
     fn is_high_octave(&self) -> bool {
         match self {
             Item::Note(note) => match note {
@@ -170,16 +170,19 @@ fn main() {
         println!();
 
         (0..6).for_each(|hole| {
-            &items.iter().for_each(|item| match item {
-                Item::Note(_) => {
-                    if item.hole_covered(hole) {
-                        print!("●  ");
-                    } else {
-                        print!("○  ");
+            &items.iter().for_each(|item| {
+                let c = match item {
+                    Item::Note(_) => {
+                        if item.hole_covered(hole) {
+                            "●"
+                        } else {
+                            "○"
+                        }
                     }
-                }
-                Item::Space | Item::Bar => print!("{}", item),
-                Item::Gap => print!("   "),
+                    Item::Space | Item::Bar => item.as_str(),
+                    Item::Gap => "",
+                };
+                print!("{: <3}", c)
             });
             println!();
         });
