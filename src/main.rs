@@ -61,28 +61,28 @@ impl fmt::Display for Item {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let x = match self {
             Item::Note(note) => match note {
-                Note::D1 => "d  ",
-                Note::E1 => "e  ",
-                Note::F1Sharp => "f# ",
-                Note::G1 => "g  ",
-                Note::A1 => "a  ",
-                Note::B1 => "b  ",
-                Note::C1Sharp => "c# ",
+                Note::D1 => "d",
+                Note::E1 => "e",
+                Note::F1Sharp => "f#",
+                Note::G1 => "g",
+                Note::A1 => "a",
+                Note::B1 => "b",
+                Note::C1Sharp => "c#",
 
-                Note::D2 => "D  ",
-                Note::E2 => "E  ",
-                Note::F2Sharp => "F# ",
-                Note::G2 => "G  ",
-                Note::A2 => "A  ",
-                Note::B2 => "B  ",
-                Note::C2Sharp => "C# ",
+                Note::D2 => "D",
+                Note::E2 => "E",
+                Note::F2Sharp => "F#",
+                Note::G2 => "G",
+                Note::A2 => "A",
+                Note::B2 => "B",
+                Note::C2Sharp => "C#",
             },
-            Item::Bar => "|  ",
-            Item::Gap => "-  ",
-            Item::Space => "   ",
+            Item::Bar => "|",
+            Item::Gap => "-",
+            Item::Space => "",
         };
 
-        write!(f, "{}", x)
+        write!(f, "{: <3}", x)
     }
 }
 
