@@ -52,7 +52,7 @@ impl From<char> for Item {
             ' ' => Item::Space,
             '-' => Item::Gap,
 
-            _ => unimplemented!("bad char \"{}\"", input),
+            _ => panic!("bad char \"{}\"", input),
         }
     }
 }
