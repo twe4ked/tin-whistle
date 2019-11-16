@@ -104,6 +104,6 @@ pub fn parse_items(input: String) -> Vec<Vec<Item>> {
     input
         .lines()
         .filter(|line| !line.starts_with('#') && !line.starts_with("T:"))
-        .map(|line| line.chars().map(|c| Item::from(c)).collect())
+        .map(|line| line.chars().map(Item::from).collect())
         .collect()
 }
