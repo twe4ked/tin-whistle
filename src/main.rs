@@ -3,22 +3,32 @@ use std::io;
 use std::io::prelude::*;
 
 #[derive(Debug)]
-enum Note {
-    D1,
-    E1,
-    F1Sharp,
-    G1,
-    A1,
-    B1,
-    C1Sharp,
+enum Octave {
+    High,
+    Low,
+}
 
-    D2,
-    E2,
-    F2Sharp,
-    G2,
-    A2,
-    B2,
-    C2Sharp,
+#[derive(Debug)]
+struct Note {
+    octave: Octave,
+    value: Value,
+}
+
+impl Note {
+    fn new(octave: Octave, value: Value) -> Self {
+        Self { octave, value }
+    }
+}
+
+#[derive(Debug)]
+enum Value {
+    D,
+    E,
+    FSharp,
+    G,
+    A,
+    B,
+    CSharp,
 }
 
 #[derive(Debug)]
@@ -32,21 +42,21 @@ enum Item {
 impl From<char> for Item {
     fn from(input: char) -> Self {
         match input {
-            'd' => Item::Note(Note::D1),
-            'e' => Item::Note(Note::E1),
-            'f' => Item::Note(Note::F1Sharp),
-            'g' => Item::Note(Note::G1),
-            'a' => Item::Note(Note::A1),
-            'b' => Item::Note(Note::B1),
-            'c' => Item::Note(Note::C1Sharp),
+            'D' => Item::Note(Note::new(Octave::Low, Value::D)),
+            'E' => Item::Note(Note::new(Octave::Low, Value::E)),
+            'F' => Item::Note(Note::new(Octave::Low, Value::FSharp)),
+            'G' => Item::Note(Note::new(Octave::Low, Value::G)),
+            'A' => Item::Note(Note::new(Octave::Low, Value::A)),
+            'B' => Item::Note(Note::new(Octave::Low, Value::B)),
+            'C' => Item::Note(Note::new(Octave::Low, Value::CSharp)),
 
-            'D' => Item::Note(Note::D2),
-            'E' => Item::Note(Note::E2),
-            'F' => Item::Note(Note::F2Sharp),
-            'G' => Item::Note(Note::G2),
-            'A' => Item::Note(Note::A2),
-            'B' => Item::Note(Note::B2),
-            'C' => Item::Note(Note::C2Sharp),
+            'd' => Item::Note(Note::new(Octave::High, Value::D)),
+            'e' => Item::Note(Note::new(Octave::High, Value::E)),
+            'f' => Item::Note(Note::new(Octave::High, Value::FSharp)),
+            'g' => Item::Note(Note::new(Octave::High, Value::G)),
+            'a' => Item::Note(Note::new(Octave::High, Value::A)),
+            'b' => Item::Note(Note::new(Octave::High, Value::B)),
+            'c' => Item::Note(Note::new(Octave::High, Value::CSharp)),
 
             '|' => Item::Bar,
             ' ' => Item::Space,
@@ -75,22 +85,25 @@ const D2: [bool; 6] = [false, true, true, true, true, true];
 impl Item {
     fn as_str(&self) -> &'static str {
         match self {
-            Item::Note(note) => match note {
-                Note::D1 => "d",
-                Note::E1 => "e",
-                Note::F1Sharp => "f#",
-                Note::G1 => "g",
-                Note::A1 => "a",
-                Note::B1 => "b",
-                Note::C1Sharp => "c#",
-
-                Note::D2 => "D",
-                Note::E2 => "E",
-                Note::F2Sharp => "F#",
-                Note::G2 => "G",
-                Note::A2 => "A",
-                Note::B2 => "B",
-                Note::C2Sharp => "C#",
+            Item::Note(note) => match note.octave {
+                Octave::Low => match note.value {
+                    Value::D => "D",
+                    Value::E => "E",
+                    Value::FSharp => "F#",
+                    Value::G => "G",
+                    Value::A => "A",
+                    Value::B => "B",
+                    Value::CSharp => "C#",
+                },
+                Octave::High => match note.value {
+                    Value::D => "d",
+                    Value::E => "e",
+                    Value::FSharp => "f#",
+                    Value::G => "g",
+                    Value::A => "a",
+                    Value::B => "b",
+                    Value::CSharp => "c#",
+                },
             },
             Item::Bar => "|",
             Item::Gap => "-",
@@ -100,15 +113,9 @@ impl Item {
 
     fn is_high_octave(&self) -> bool {
         match self {
-            Item::Note(note) => match note {
-                Note::D1
-                | Note::E1
-                | Note::F1Sharp
-                | Note::G1
-                | Note::A1
-                | Note::B1
-                | Note::C1Sharp => true,
-                _ => false,
+            Item::Note(note) => match note.octave {
+                Octave::High => true,
+                Octave::Low => false,
             },
             _ => false,
         }
@@ -116,15 +123,17 @@ impl Item {
 
     fn hole_covered(&self, i: usize) -> bool {
         match self {
-            Item::Note(note) => match note {
-                Note::D1 => D1[i],
-                Note::E1 | Note::E2 => E[i],
-                Note::F1Sharp | Note::F2Sharp => F[i],
-                Note::G1 | Note::G2 => G[i],
-                Note::A1 | Note::A2 => A[i],
-                Note::B1 | Note::B2 => B[i],
-                Note::C1Sharp | Note::C2Sharp => C[i],
-                Note::D2 => D2[i],
+            Item::Note(note) => match note.value {
+                Value::E => E[i],
+                Value::FSharp => F[i],
+                Value::G => G[i],
+                Value::A => A[i],
+                Value::B => B[i],
+                Value::CSharp => C[i],
+                Value::D => match note.octave {
+                    Octave::Low => D1[i],
+                    Octave::High => D2[i],
+                },
             },
             _ => unreachable!(),
         }
