@@ -63,7 +63,7 @@ fn main() {
         println!();
 
         (0..6).for_each(|hole| {
-            &items.iter().for_each(|item| {
+            items.iter().for_each(|item| {
                 let c = match item {
                     Item::Note(_) => {
                         if hole_covered(item, hole) {
