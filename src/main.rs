@@ -18,6 +18,13 @@ impl Note {
     fn new(octave: Octave, value: Value) -> Self {
         Self { octave, value }
     }
+
+    fn is_high_octave(&self) -> bool {
+        match self.octave {
+            Octave::High => true,
+            Octave::Low => false,
+        }
+    }
 }
 
 #[derive(Debug)]
@@ -111,16 +118,6 @@ impl Item {
         }
     }
 
-    fn is_high_octave(&self) -> bool {
-        match self {
-            Item::Note(note) => match note.octave {
-                Octave::High => true,
-                Octave::Low => false,
-            },
-            _ => false,
-        }
-    }
-
     fn hole_covered(&self, i: usize) -> bool {
         match self {
             Item::Note(note) => match note.value {
@@ -167,13 +164,14 @@ fn main() {
         for item in &items {
             match item {
                 Item::Bar => print!("|  "),
-                _ => {
-                    if item.is_high_octave() {
+                Item::Note(note) => {
+                    if note.is_high_octave() {
                         print!(".  ");
                     } else {
                         print!("   ");
                     }
                 }
+                _ => print!("   "),
             }
         }
         println!();
